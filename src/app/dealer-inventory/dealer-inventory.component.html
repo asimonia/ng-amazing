@@ -5,7 +5,7 @@
   [ngClass]="{'featured-item': car.featured}">
   <h3>{{car.year}} {{car.make}}, {{car.model}}</h3>
   <p class="gallery">
-    <app-photo-gallery *ngIf="car.photos.length > 0" [photos]="car.photos"></app-photo-gallery>
+    <app-photo-gallery (on-navigate)="handlePhotoNavigation($event, car)" *ngIf="car.photos.length > 0" [photos]="car.photos"></app-photo-gallery>
   </p>
   <p *ngIf="car.featured">Featured car of the month!</p>
   <p>VIN: {{car.VIN}}</p>
