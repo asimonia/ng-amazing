@@ -51,6 +51,8 @@ export class DealerInventoryComponent implements OnInit {
     },
   ];
 
+  vehicleToEdit: Vehicle;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -73,4 +75,15 @@ export class DealerInventoryComponent implements OnInit {
   addVehicle(v: Vehicle): void {
     this.inventory.push(v);
   }
+
+  beginEditing(v: Vehicle): void {
+    this.vehicleToEdit = v;
+  }
+
+  commitEdit(v: Vehicle): void {
+    Object.assign(this.vehicleToEdit, v);
+
+    this.vehicleToEdit = undefined;
+  }
+
 }

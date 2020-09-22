@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 import { NgForm } from '@angular/forms';
 import { Vehicle } from '../vehicle';
@@ -9,6 +9,9 @@ import { Vehicle } from '../vehicle';
   styleUrls: ['./vehicle-form.component.css']
 })
 export class VehicleFormComponent implements OnInit {
+
+  @Input()
+  vehicle = new Vehicle('', 0, '', '', 0, 0, false, []);
 
   @Output('on-submit')
   emitter = new EventEmitter();
