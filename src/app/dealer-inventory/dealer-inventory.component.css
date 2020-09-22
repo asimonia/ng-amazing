@@ -4,3 +4,7 @@
   padding: 5px;
   background-color: #cfcfcf;
 }
+
+.gallery {
+  max-width: 400px;
+}
