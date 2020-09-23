@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Vehicle } from '../vehicle';
+import { InventoryService } from '../inventory.service';
 
 @Component({
   selector: 'app-dealer-inventory',
@@ -7,55 +8,14 @@ import { Vehicle } from '../vehicle';
   styleUrls: ['./dealer-inventory.component.css']
 })
 export class DealerInventoryComponent implements OnInit {
-  inventory: Vehicle[] = [
-    {
-      VIN: 'Y123',
-      year: 2012,
-      make: 'HONDA',
-      model: 'Civic',
-      mileage: 70000,
-      price: 5900.00,
-      featured: false,
-      photos: []
-    },
-    {
-      VIN: 'P1023',
-      year: 2019,
-      make: 'BMW',
-      model: '328i',
-      mileage: 42000,
-      price: 12000.00,
-      featured: true,
-      photos: ['/assets/b-1.png', '/assets/b-2.png', '/assets/b-3.png', '/assets/b-4.png']
-    },
-    {
-      VIN: 'NM182',
-      year: 2018,
-      make: 'KIA',
-      model: 'Niro',
-      mileage: 31000,
-      price: 7900.00,
-      featured: false,
-      photos: ['/assets/k-1.png', '/assets/k-2.png', '/assets/k-3.png']
-
-    },
-    {
-      VIN: 'Y187',
-      year: 2014,
-      make: 'HONDA',
-      model: 'Accord',
-      mileage: 40000,
-      price: 8900.00,
-      featured: false,
-      photos: []
-    },
-  ];
+  inventory: Vehicle[] = [];
 
   vehicleToEdit: Vehicle;
 
-  constructor() { }
+  constructor(private inventorySvc: InventoryService) { }
 
   ngOnInit(): void {
+    this.inventory = this.inventorySvc.getInventory();
   }
 
   trackByVIN(index: number, car: Vehicle): string {
@@ -63,7 +23,8 @@ export class DealerInventoryComponent implements OnInit {
   }
 
   deleteVehicle(car: Vehicle): void {
-    this.inventory = this.inventory.filter(c => c.VIN !== car.VIN);
+    this.inventorySvc.deleteVehicle(car);
+    this.inventory = this.inventorySvc.getInventory();
   }
 
   handlePhotoNavigation(photoIndex: number, car: Vehicle): void {
@@ -73,7 +34,8 @@ export class DealerInventoryComponent implements OnInit {
   }
 
   addVehicle(v: Vehicle): void {
-    this.inventory.push(v);
+    this.inventorySvc.addVehicle(v);
+    this.inventory = this.inventorySvc.getInventory();
   }
 
   beginEditing(v: Vehicle): void {
@@ -81,7 +43,8 @@ export class DealerInventoryComponent implements OnInit {
   }
 
   commitEdit(v: Vehicle): void {
-    Object.assign(this.vehicleToEdit, v);
+    this.inventorySvc.updateVehicle(this.vehicleToEdit.VIN, v);
+    this.inventory = this.inventorySvc.getInventory();
 
     this.vehicleToEdit = undefined;
   }
