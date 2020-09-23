@@ -10,6 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VehicleFormReactiveComponent } from './vehicle-form-reactive/vehicle-form-reactive.component';
 import { HttpClientModule } from '@angular/common/http';
 
+import '@angular/common/locales/global/fr';
+
 @NgModule({
   declarations: [
     AppComponent,

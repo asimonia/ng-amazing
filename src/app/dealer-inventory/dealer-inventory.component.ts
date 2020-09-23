@@ -17,7 +17,7 @@ export class DealerInventoryComponent implements OnInit {
     return car.VIN;
   }
 
-  deleteVehicle(car: Vehicle) {
+  deleteVehicle(car: Vehicle): void {
     this.inventorySvc.deleteVehicle(car).subscribe(() => {
       // Update local copy of the list
       this.inventory = this.inventory.filter(v => v.VIN !== car.VIN);
