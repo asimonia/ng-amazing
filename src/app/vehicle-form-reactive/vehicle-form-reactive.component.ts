@@ -2,6 +2,19 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Vehicle } from '../vehicle';
 
+
+function validate_VIN(control: FormControl): object {
+  const banned = ['I', 'O', 'Q'];
+
+  if (banned.some(str => control.value.includes(str))) {
+    return {
+      error: 'Must not contain I, O or Q'
+    };
+  } else {
+    return null;
+  }
+}
+
 @Component({
   selector: 'app-vehicle-form-reactive',
   templateUrl: './vehicle-form-reactive.component.html',
@@ -21,7 +34,7 @@ export class VehicleFormReactiveComponent implements OnInit {
 
   ngOnInit(): void {
     this.vehicleForm = new FormGroup({
-      veh_vin: new FormControl(this.vehicle.VIN, [Validators.minLength(3), Validators.required]),
+      veh_vin: new FormControl(this.vehicle.VIN, [validate_VIN, Validators.minLength(3), Validators.required]),
       veh_year: new FormControl(this.vehicle.year, [Validators.required]),
       veh_make: new FormControl(this.vehicle.make, Validators.required),
       veh_model: new FormControl(this.vehicle.model, Validators.required),
