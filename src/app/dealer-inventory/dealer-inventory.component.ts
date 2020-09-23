@@ -8,23 +8,27 @@ import { InventoryService } from '../inventory.service';
   styleUrls: ['./dealer-inventory.component.css']
 })
 export class DealerInventoryComponent implements OnInit {
+
+  vehicleToEdit: Vehicle = undefined;
+
   inventory: Vehicle[] = [];
-
-  vehicleToEdit: Vehicle;
-
-  constructor(private inventorySvc: InventoryService) { }
-
-  ngOnInit(): void {
-    this.inventory = this.inventorySvc.getInventory();
-  }
 
   trackByVIN(index: number, car: Vehicle): string {
     return car.VIN;
   }
 
-  deleteVehicle(car: Vehicle): void {
-    this.inventorySvc.deleteVehicle(car);
-    this.inventory = this.inventorySvc.getInventory();
+  deleteVehicle(car: Vehicle) {
+    this.inventorySvc.deleteVehicle(car).subscribe(() => {
+      // Update local copy of the list
+      this.inventory = this.inventory.filter(v => v.VIN !== car.VIN);
+    });
+  }
+
+  constructor(private inventorySvc: InventoryService) { }
+
+  ngOnInit(): void {
+    this.inventorySvc.getInventory()
+      .subscribe(list => this.inventory = list);
   }
 
   handlePhotoNavigation(photoIndex: number, car: Vehicle): void {
@@ -34,8 +38,9 @@ export class DealerInventoryComponent implements OnInit {
   }
 
   addVehicle(v: Vehicle): void {
-    this.inventorySvc.addVehicle(v);
-    this.inventory = this.inventorySvc.getInventory();
+    this.inventorySvc.addVehicle(v).subscribe(() => {
+      this.inventory.push(v);
+    });
   }
 
   beginEditing(v: Vehicle): void {
@@ -43,10 +48,11 @@ export class DealerInventoryComponent implements OnInit {
   }
 
   commitEdit(v: Vehicle): void {
-    this.inventorySvc.updateVehicle(this.vehicleToEdit.VIN, v);
-    this.inventory = this.inventorySvc.getInventory();
-
-    this.vehicleToEdit = undefined;
+    this.inventorySvc.updateVehicle(this.vehicleToEdit.VIN, v)
+      .subscribe(() => {
+        Object.assign(this.vehicleToEdit, v);
+        this.vehicleToEdit = undefined;
+      });
   }
 
 }
